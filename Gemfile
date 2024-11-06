@@ -3,5 +3,3 @@
 source "https://rubygems.org"
 
 # gem "rails"
-
-gem "gosu", "~> 1.4"
