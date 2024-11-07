@@ -16,9 +16,41 @@ class ChessBoard
     'H' => 7
   }
 
-  def initialize
+  def initialize(player = "w")
     @cur_move = 'w'
     @board = Array.new(8) {Array.new(8, ".")}
+
+    letters = ["A", "B", "C", "D", "E", "F", "G", "H"]
+    pieces = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"]
+
+    case player.upcase()
+
+    when 'W'
+      # Placing pawns
+
+      for i in 0...letters.length()
+        c = "#{letters[i]}"
+        # Placing pawns in columns
+        place_piece(ChessPiece.new("B", "pawn"), (c + "7"))
+        place_piece(ChessPiece.new("W", "pawn"), (c + "2"))
+
+        # Placing pieces in columns
+        place_piece(ChessPiece.new("B", pieces[i]), (c + "8"))
+        place_piece(ChessPiece.new("W", pieces[i]), (c + "1"))
+      end
+    when 'B'
+      for i in 0...letters.length()
+        c = "#{letters[i]}"
+        # Placing pawns in columns
+        place_piece(ChessPiece.new("W", "pawn"), (c + "7"))
+        place_piece(ChessPiece.new("B", "pawn"), (c + "2"))
+
+        # Placing pieces in columns
+        place_piece(ChessPiece.new("W", pieces[i]), (c + "8"))
+        place_piece(ChessPiece.new("B", pieces[i]), (c + "1"))
+      end
+
+    end
 
   end
 
@@ -67,7 +99,6 @@ class ChessBoard
       "row" => 8 - a[1].to_i,
       "column" => @@COLUMNS[a[0]]
     }
-    binding.pry
     return out
   end
 

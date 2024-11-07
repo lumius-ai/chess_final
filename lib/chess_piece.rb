@@ -35,6 +35,7 @@ class ChessPiece
 
   end
 
+  # factory
   def get_valid_moves()
 
   end

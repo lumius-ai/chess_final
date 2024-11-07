@@ -4,10 +4,6 @@ require_relative "lib/chess_piece"
 require "pry-byebug"
 
 board = ChessBoard.new()
-
-board.place_piece(ChessPiece.new(), "A8")
-board.place_piece(ChessPiece.new(), "B7")
-board.place_piece(ChessPiece.new(), "C6")
+board2 = ChessBoard.new("b")
 puts(board)
-
-# puts(board)
+puts(board2)
