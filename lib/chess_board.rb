@@ -20,29 +20,34 @@ class ChessBoard
     @cur_move = 'w'
     @board = Array.new(8) {Array.new(8, ".")}
 
-    place_piece(ChessPiece.new(), "A8")
-
   end
 
   # Place a piece at given coord
-  def place_piece(piece, coord)
+  def place_piece(piece, coord) 
 
-    # DEBUG
-    
-
-    a = coord.split("")
-    row = a[1].to_i % 8
-    column = @@COLUMNS[a[0]]
-    # binding.pry
-    @board[row][column] = piece
+    pos1 = parse(coord)
+    @board[pos1["row"]][pos1["column"]] = piece
   end
 
 
   # Move a piece from x to Y
+  def move_piece(source, dest)
+    source_coords = parse(source)
+    dest_coords = parse(dest)
+
+    # The two squares
+    source = @board[source_coords["row"]][@board[source_coords["column"]]]
+    destination = @board[dest_coords["row"]][@board[dest_coords["column"]]]
+
+    # Move to target position
+    destination = source
+    source = "."
+    
+  end
   # Display Board
   def to_s
     r = 8
-    outstr = " A  B  C  D  E  F  G  H\n"
+    outstr = "+ A  B  C  D  E  F  G  H +\n"
     @board.each do |row|
       outstr += r.to_s
       row.each do |element|
@@ -53,7 +58,20 @@ class ChessBoard
       outstr += ("\n")
     
     end
-    outstr += " A  B  C  D  E  F  G  H\n"
+    outstr += "+ A  B  C  D  E  F  G  H +\n"
     return outstr
   end
+
+  private
+  # Parses a board coord into an array position dict
+  def parse(str)
+    a = str.split("")
+    out = {
+      "row" => a[1].to_i % 8,
+      "column" => @@COLUMNS[a[0]]
+    }
+    return out
+  end
+
+
 end
