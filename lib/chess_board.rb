@@ -35,15 +35,12 @@ class ChessBoard
     source_coords = parse(source)
     dest_coords = parse(dest)
 
-    # The two squares
-    source = @board[source_coords["row"]][@board[source_coords["column"]]]
-    destination = @board[dest_coords["row"]][@board[dest_coords["column"]]]
-
-    # Move to target position
-    destination = source
-    source = "."
-    
+    # Destination = source
+    @board[dest_coords["row"]][dest_coords["column"]] = @board[source_coords["row"]][source_coords["column"]]
+    # Source set to default
+    @board[source_coords["row"]][source_coords["column"]] = "."
   end
+
   # Display Board
   def to_s
     r = 8
@@ -67,9 +64,10 @@ class ChessBoard
   def parse(str)
     a = str.split("")
     out = {
-      "row" => a[1].to_i % 8,
+      "row" => 8 - a[1].to_i,
       "column" => @@COLUMNS[a[0]]
     }
+    binding.pry
     return out
   end
 
