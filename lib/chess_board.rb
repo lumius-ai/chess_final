@@ -2,7 +2,7 @@
 require_relative("chess_piece")
 require_relative("chess_coords")
 
-def ChessBoard
+class ChessBoard
   include ChessCoords
 
   attr_reader :current_player, :board

@@ -3,85 +3,85 @@
 require_relative('chess_coords')
 
 
-def ChessPiece
-attr_reader :icon, :color, :name
-attr_accessor :position, :Moves
+class ChessPiece
+  attr_reader :icon, :color, :name
+  attr_accessor :position, :Moves
 
-include ChessCoords
+  include ChessCoords
 
-@@WHITE_PIECES = {
-  'pawn' => "♟",
-  'knight' => "♞",
-  'bishop' => "♝",
-  'rook' => "♜",
-  'queen' => "♛",
-  'king' => "♚",
+  @@WHITE_PIECES = {
+    'pawn' => "♟",
+    'knight' => "♞",
+    'bishop' => "♝",
+    'rook' => "♜",
+    'queen' => "♛",
+    'king' => "♚",
 
-}
+  }
 
-@@BLACK_PIECES = {
-  'pawn' => "♙",
-  'knight' => "♘",
-  'bishop' => "♗",
-  'rook' => "♖",
-  'queen' => "♕",
-  'king' => "♔",
-}
+  @@BLACK_PIECES = {
+    'pawn' => "♙",
+    'knight' => "♘",
+    'bishop' => "♗",
+    'rook' => "♖",
+    'queen' => "♕",
+    'king' => "♔",
+  }
 
-public
-# Constructor
-def initialize(args={})
-  # Extract args
-  args['color'].nil? ? @color = 'W' : @color = args['color']
-  args['name'].nil? ? @name = 'pawn': @name = args['name']
-  args['posiiton'].nil? ? @position = 'E5' : @position = args['position']
+  public
+  # Constructor
+  def initialize(args={})
+    # Extract args
+    args['color'].nil? ? @color = 'W' : @color = args['color']
+    args['name'].nil? ? @name = 'pawn': @name = args['name']
+    args['posiiton'].nil? ? @position = 'E5' : @position = args['position']
 
-  case @color.upcase
-  when "W"
-    @icon = @@BLACK_PIECES[@name]
-  when "B"
-    @icon = @@WHITE_PIECES[@name]
-  else
-    @icon = 'X'
+    case @color.upcase
+    when "W"
+      @icon = @@BLACK_PIECES[@name]
+    when "B"
+      @icon = @@WHITE_PIECES[@name]
+    else
+      @icon = 'X'
+    end
   end
-end
 
-# To_string
-def to_s()
-  return @icon
-end
+  # To_string
+  def to_s()
+    return @icon
+  end
 
-# Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
-def update_moves()
+  # Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
+  def update_moves()
 
-end
+  end
 
 
-private
-# Gets all diagonal squares relative to current position
-def get_diagonals()
+  private
+  # Gets all diagonal squares relative to current position
+  def get_diagonals()
 
-end
+  end
 
-# Gets the rook moves for a given position
-def get_cross()
+  # Gets the rook moves for a given position
+  def get_cross()
 
-end
+  end
 
-# Gets all knight moves relative to a position
-def get_knight()
+  # Gets all knight moves relative to a position
+  def get_knight()
 
-end
+  end
 
-# Gets all adjacent tiles relative to the position
-def get_king()
+  # Gets all adjacent tiles relative to the position
+  def get_king()
 
-end
+  end
 
-# Gets all pawn moves relative to position
-def get_pawn()
+  # Gets all pawn moves relative to position
+  def get_pawn()
 
-end
+  end
 
 
 end
