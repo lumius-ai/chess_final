@@ -65,9 +65,13 @@ class ChessBoard
 
   private
   # Create a specified piece and place it at the given position
-  def place_piece(name, color, position)
+  def place_piece(args={})
+    args['name'].nil? ? name = "pawn" : name = args['name']
+    args['color'].nil? ? color = "w" : color = args['color']
+    args['position'].nil? ? position = "A8" : position = args['position']
+
     destination_array = board_to_array(position)
-    piece = ChessPiece.new(name, color, position)
+    piece = ChessPiece.new({'name' => name, 'color' => color, 'position' => position})
 
     row = destination_array[0]
     column = destination_array[1]
@@ -84,23 +88,23 @@ class ChessBoard
       for i in 0...@@LETTERS.length()
         c = "#{@@LETTERS[i]}"
         # Placing pawns in columns
-        place_piece(ChessPiece.new("B", "pawn", (c + "7")), (c + "7"))
-        place_piece(ChessPiece.new("W", "pawn", (c + "2")), (c + "2"))
+        place_piece({'color' => 'B', 'name' => 'pawn', 'position' => (c + "7")})
+        place_piece({'color' => "W", 'name' => "pawn", 'position' => (c + "2")})
 
         # Placing pieces in columns
-        place_piece(ChessPiece.new("B", @@PIECES[i], (c + "8")), (c + "8"))
-        place_piece(ChessPiece.new("W", @@PIECES[i], (c + "1")), (c + "1"))
+        place_piece({'color' => "B", 'name' => @@PIECES[i], 'position' => (c + "8")})
+        place_piece({'color' => "W", 'name' => @@PIECES[i], 'position' => (c + "1")})
       end
     when 'B'
       for i in 0...@@LETTERS.length()
         c = "#{@@LETTERS[i]}"
         # Placing pawns in columns
-        place_piece(ChessPiece.new("W", "pawn", (c + "7")), (c + "7"))
-        place_piece(ChessPiece.new("B", "pawn", (c + "2")), (c + "2"))
+        place_piece({'color' => "W", 'name' => "pawn", 'position' => (c + "7")})
+        place_piece({'color' => "B", 'name' => "pawn", 'position' => (c + "2")})
 
         # Placing pieces in columns
-        place_piece(ChessPiece.new("W", @@PIECES[i], (c + "8")), (c + "8"))
-        place_piece(ChessPiece.new("B", @@PIECES[i], (c + "1")), (c + "1"))
+        place_piece({'color' => "W", 'name' => @@PIECES[i], 'position' => (c + "8")})
+        place_piece({'color' => "B", 'name' => @@PIECES[i], 'position' => (c + "1")})
       end
     end
   end

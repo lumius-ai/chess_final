@@ -34,7 +34,7 @@ class ChessPiece
     # Extract args
     args['color'].nil? ? @color = 'W' : @color = args['color']
     args['name'].nil? ? @name = 'pawn': @name = args['name']
-    args['posiiton'].nil? ? @position = 'E5' : @position = args['position']
+    args['position'].nil? ? @position = 'E5' : @position = args['position']
 
     case @color.upcase
     when "W"
