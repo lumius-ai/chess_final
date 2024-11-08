@@ -11,15 +11,26 @@ module ChessCoords
   'H' => 7
 }
 
-  #  "A8" => "00"
+  # Convert a board notation position into a 2 digit row-column array
   def board_to_array(str)
-    a = str.split("")
-    out = {
-      "row" => 8 - a[1].to_i,
-      "column" => @@COLUMNS[a[0]]
-    }
-    return out
+
   end
 
-  # "00" => "A8"
+  # Convert a 2 digit array into board notation
+  def array_to_board(arr)
+
+  end
+
+  
+  # #  "A8" => "00"
+  # def board_to_array(str)
+  #   a = str.split("")
+  #   out = {
+  #     "row" => 8 - a[1].to_i,
+  #     "column" => @@COLUMNS[a[0]]
+  #   }
+  #   return out
+  # end
+
+  # # "00" => "A8"
 end
