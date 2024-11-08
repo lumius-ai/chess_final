@@ -2,7 +2,9 @@
 
 
 class ChessPiece
-  attr_reader :piece
+  attr_reader :piece, :name, :color
+  attr_accessor :position, :possible_moves
+
   WHITE_PIECES = {
     'pawn' => "♟",
     'knight' => "♞",
@@ -23,21 +25,18 @@ class ChessPiece
   }
 
 
-  def initialize(color = "W", piece = "pawn")
+  def initialize(color = "W", name = "pawn", position = "A8")
     case color.upcase
     when "W"
-      @piece = WHITE_PIECES[piece]
+      @piece = WHITE_PIECES[name]
+
     when "B"
-      @piece = BLACK_PIECES[piece]
+      @piece = BLACK_PIECES[name]
     else
       @piece = "X"
     end
-
-  end
-
-  # factory
-  def get_valid_moves()
-
+    @name = name
+    @position = position
   end
 
   # Printable
