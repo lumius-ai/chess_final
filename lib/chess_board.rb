@@ -5,7 +5,7 @@ require_relative("chess_coords")
 class ChessBoard
   include ChessCoords
 
-  attr_reader :current_player, :board
+  attr_reader :current_player, :board, :player
 
   @@LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"]
   @@PIECES = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"]
@@ -14,6 +14,7 @@ class ChessBoard
   # Constructor
   def initialize(args={})
     args['current_player'].nil? ? @current_player = "w" : @current_player = args['current_player']
+    args['player'].nil? ? ChessPiece.set_player('W') : Chesspiece.set_player(args['player'])
 
     @board = Array.new(8) {Array.new(8, '.')}
 
@@ -51,6 +52,35 @@ class ChessBoard
     @board[dest_array[0]][dest_array[1]] = @board[source_array[0]][source_array[1]]
     # Source set to default
     @board[source_array[0]][source_array[1]] = "."
+  end
+
+  # TEST REMOVE LATER
+  def clear()
+    @board = Array.new(8) {Array.new(8, '.')}
+  end
+
+  # All set all movable tiles to x
+  def visualise(pos)
+    piece = select_piece(pos)
+
+    if piece == '.'
+      return
+    end
+
+    piece.moves.each do |move|
+      place_piece({'color' => 'X', 'position' => move})
+    end
+  end
+
+  # Return piece at that tile
+  def select_piece(pos)
+    coord = board_to_array(pos)
+    row = coord[0]
+    col = coord[1]
+    
+    piece = @board[row][col]
+
+    return piece
   end
 
   # Saves game state to JSON
