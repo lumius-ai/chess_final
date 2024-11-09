@@ -1,2 +1,7 @@
-/spec
+spec
+
 .rspec
+
+lib/testboard.rb
+
+/main.rb
