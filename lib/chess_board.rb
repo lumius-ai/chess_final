@@ -63,9 +63,6 @@ class ChessBoard
   def visualise(pos)
     piece = select_piece(pos)
 
-    # TEST
-    # binding.pry
-
     if piece == '.'
       return
     end
@@ -96,8 +93,7 @@ class ChessBoard
 
   end
 
-  # TEST UNCOMMENT BEFORE PUSHING TO MAIN
-  # private
+  private
   # Create a specified piece and place it at the given position
   def place_piece(args={})
     args['name'].nil? ? name = "pawn" : name = args['name']
