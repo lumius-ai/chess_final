@@ -5,7 +5,7 @@ require_relative("chess_coords")
 class ChessBoard
   include ChessCoords
 
-  attr_reader :current_player, :board
+  attr_reader :current_player, :board, :player
 
   @@LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"]
   @@PIECES = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"]
@@ -14,6 +14,7 @@ class ChessBoard
   # Constructor
   def initialize(args={})
     args['current_player'].nil? ? @current_player = "w" : @current_player = args['current_player']
+    args['player'].nil? ? ChessPiece.set_player('W') : Chesspiece.set_player(args['player'])
 
     @board = Array.new(8) {Array.new(8, '.')}
 
@@ -53,6 +54,38 @@ class ChessBoard
     @board[source_array[0]][source_array[1]] = "."
   end
 
+  # TEST REMOVE LATER
+  def clear()
+    @board = Array.new(8) {Array.new(8, '.')}
+  end
+
+  # All set all movable tiles to x
+  def visualise(pos)
+    piece = select_piece(pos)
+
+    # TEST
+    # binding.pry
+
+    if piece == '.'
+      return
+    end
+
+    piece.moves.each do |move|
+      place_piece({'color' => 'X', 'position' => move})
+    end
+  end
+
+  # Return piece at that tile
+  def select_piece(pos)
+    coord = board_to_array(pos)
+    row = coord[0]
+    col = coord[1]
+    
+    piece = @board[row][col]
+
+    return piece
+  end
+
   # Saves game state to JSON
   def save_game
 
@@ -63,7 +96,8 @@ class ChessBoard
 
   end
 
-  private
+  # TEST UNCOMMENT BEFORE PUSHING TO MAIN
+  # private
   # Create a specified piece and place it at the given position
   def place_piece(args={})
     args['name'].nil? ? name = "pawn" : name = args['name']

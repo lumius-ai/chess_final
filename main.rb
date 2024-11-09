@@ -3,8 +3,13 @@ require_relative "lib/chess_piece"
 
 require "pry-byebug"
 
+POS = 'D4'
+
+arg = {'name' => 'pawn', 'position' => POS, 'color' => "B", 'player' => "W"}
 board = ChessBoard.new()
-board.move_piece("E7", "E6")
+board.place_piece(arg)
+p = board.select_piece(POS)
+board.visualise(POS)
 puts(board)
 
 

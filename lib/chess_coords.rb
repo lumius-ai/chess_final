@@ -14,6 +14,9 @@ module ChessCoords
   # Convert a board notation position into a 2 digit row-column array
   def board_to_array(str)
 
+    # Leave arrays untouched
+    return str if str.class() == Array
+
     pre = str.split("")
     if not COLUMNS.has_key?(pre[0]) or pre[1].to_i < 0 or pre[1].to_i > 8 or pre.length != 2
       return nil
@@ -30,6 +33,9 @@ module ChessCoords
   # Convert a 2 digit array into board notation
   # [0, 0]
   def array_to_board(arr)
+    # Leave strings untouched
+    return arr if arr.class() == String
+
     if arr.length != 2 or arr[0] < 0 or arr[0] > 7 or arr[1] < 0 or arr[1] > 7
       return nil
     end
