@@ -24,7 +24,7 @@ class ChessBoard
   # To string
   def to_s
     r = 8
-    outstr = "     A  B  C  D  E  F  G  H \n\n"
+    outstr = "    A  B  C  D  E  F  G  H \n\n"
     @board.each do |row|
       outstr += "#{r.to_s}  "
       row.each do |element|
@@ -43,7 +43,7 @@ class ChessBoard
   def move_piece(source, destination)
     # Convert from board notation to array coords
     source_array = board_to_array(source)
-    dest_array = board_to_array(dest)
+    dest_array = board_to_array(destination)
 
     # TODO: Check if this is a valid move
     
@@ -88,23 +88,23 @@ class ChessBoard
       for i in 0...@@LETTERS.length()
         c = "#{@@LETTERS[i]}"
         # Placing pawns in columns
-        place_piece({'color' => 'B', 'name' => 'pawn', 'position' => (c + "7")})
-        place_piece({'color' => "W", 'name' => "pawn", 'position' => (c + "2")})
+        place_piece({'color' => 'B', 'name' => 'pawn', 'position' => (c + "7"), 'player' => 'W'})
+        place_piece({'color' => "W", 'name' => "pawn", 'position' => (c + "2"), 'player' => 'W'})
 
         # Placing pieces in columns
-        place_piece({'color' => "B", 'name' => @@PIECES[i], 'position' => (c + "8")})
-        place_piece({'color' => "W", 'name' => @@PIECES[i], 'position' => (c + "1")})
+        place_piece({'color' => "B", 'name' => @@PIECES[i], 'position' => (c + "8"), 'player' => 'W'})
+        place_piece({'color' => "W", 'name' => @@PIECES[i], 'position' => (c + "1"), 'player' => 'W'})
       end
     when 'B'
       for i in 0...@@LETTERS.length()
         c = "#{@@LETTERS[i]}"
         # Placing pawns in columns
-        place_piece({'color' => "W", 'name' => "pawn", 'position' => (c + "7")})
-        place_piece({'color' => "B", 'name' => "pawn", 'position' => (c + "2")})
+        place_piece({'color' => "W", 'name' => "pawn", 'position' => (c + "7"), 'player' => 'B'})
+        place_piece({'color' => "B", 'name' => "pawn", 'position' => (c + "2"), 'player' => 'B'})
 
         # Placing pieces in columns
-        place_piece({'color' => "W", 'name' => @@PIECES[i], 'position' => (c + "8")})
-        place_piece({'color' => "B", 'name' => @@PIECES[i], 'position' => (c + "1")})
+        place_piece({'color' => "W", 'name' => @@PIECES[i], 'position' => (c + "8"), 'player' => 'B'})
+        place_piece({'color' => "B", 'name' => @@PIECES[i], 'position' => (c + "1"), 'player' => 'B'})
       end
     end
   end
