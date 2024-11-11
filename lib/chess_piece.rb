@@ -8,9 +8,6 @@ class ChessPiece
 
   include ChessCoords
 
-  # B or W to indicate the color of pieces on the bottom
-  @@player = "W"
-
   @@WHITE_PIECES = {
     'pawn' => "♟",
     'knight' => "♞",
@@ -54,45 +51,6 @@ class ChessPiece
   def to_s()
     return @icon
   end
-
-  # Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
-  def update_moves()
-    p = @position
-    case @name
-    when 'pawn'
-      @moves = get_pawn(p, @@player, @color)
-
-    when 'rook'
-      @moves = get_cross(p)
-
-    when 'knight'
-      @moves = get_knight(p)
-
-    when 'bishop'
-      @moves = get_diagonals(p)
-
-    when 'queen'
-      diags = get_diagonals(p)
-      cross = get_cross(p)
-
-      @moves = diags + cross
-
-    when 'king'
-      @moves = get_king(p)
-
-    else
-      @moves = []
-    end
-    @moves = @moves.map {|e| array_to_board(e)}
-    @moves.delete(p)
-  end
-
-  # Set player global
-  def self.set_player(str)
-    @@player = str
-  end
-
-  private
   
 
 end

@@ -40,7 +40,7 @@ class ChessBoard
     return outstr
   end
     
-  # Moves piece from source to destination
+  # Moves piece from source to destination (in board format)
   def move_piece(source, destination)
     # Convert from board notation to array coords
     source_array = board_to_array(source)
@@ -50,6 +50,10 @@ class ChessBoard
     
     # Destination = source
     @board[dest_array[0]][dest_array[1]] = @board[source_array[0]][source_array[1]]
+    # Update moved piece's postion and possible moves
+    p = select_piece(destination)
+    p.position = destination
+    update_moves(p)
     # Source set to default
     @board[source_array[0]][source_array[1]] = "."
 
@@ -97,6 +101,46 @@ class ChessBoard
   end
 
   # private
+  
+
+  # Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
+  def update_moves(piece)
+    p = piece.position
+    moves = []
+
+
+    case @name
+    when 'pawn'
+      moves = get_pawn(p, @player, piece.color)
+
+    when 'rook'
+      moves = get_cross(p)
+
+    when 'knight'
+      moves = get_knight(p)
+
+    when 'bishop'
+      moves = get_diagonals(p)
+
+    when 'queen'
+      diags = get_diagonals(p)
+      cross = get_cross(p)
+
+      moves = diags + cross
+
+    when 'king'
+      moves = get_king(p)
+
+    else
+      moves = []
+    end
+    moves = moves.map {|e| array_to_board(e)}
+    moves.delete(p)
+
+    # update piece moves
+    piece.moves = moves
+  end
+
   # Create a specified piece and place it at the given position
   def place_piece(args={})
     args['name'].nil? ? name = "pawn" : name = args['name']
@@ -109,11 +153,14 @@ class ChessBoard
     row = destination_array[0]
     column = destination_array[1]
 
+    # Place piece on board
     @board[row][column] = piece
+
+    # Calculate its valid moves
+    update_moves(piece)
     
   end
-
-
+  
   # Places all pieces according to who the initial player is
   def place_pieces(color)
     case color.upcase
@@ -157,6 +204,7 @@ class ChessBoard
 
   end
 
+  # TODO: test these
   # Checks if source coord is valid based on current player, takes array
   def source_valid?(arr)
     piece = select_piece(array_to_board(arr))
