@@ -218,20 +218,20 @@ class ChessBoard
 
   # Check if move from src to dst is valid
   def move_valid?(src, dst)
-    return (source_valid?(src) and destination_valid?(src, dest))
+    return (source_valid?(src) and destination_valid?(src, dst))
   end
 
   # Checks if destination is valid based on current player, takes array
   def destination_valid?(src, dst)
     piece = select_piece(src)
-    return piece.moves.include?(dst)
+    return (src != dst and piece.moves.include?(dst))
   end
 
   # TODO: test these
   # Checks if source coord is valid based on current player, takes array
   def source_valid?(pos)
     piece = select_piece(pos)
-    (piece.class() == ChessPiece and piece.color == @current_player) ? true : false
+    (piece.class() == ChessPiece and piece.color == @current_player.upcase()) ? true : false
   end
 
   # Return T if current player's king is in check

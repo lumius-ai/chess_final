@@ -14,7 +14,12 @@ board.place_piece({'name' => name, 'position' => "F6", 'color' => "W", 'player' 
 board.place_piece({'name' => name, 'position' => "C3", 'color' => "B", 'player' => "W"})
 board.place_piece({'name' => name, 'position' => "E3", 'color' => "W", 'player' => "W"})
 
-board.visualise(POS)
+# board.visualise(POS)
 puts(board)
+board.move_piece("D5", "C3")
+board.visualise("C3")
+puts(board)
+
+puts("PLAYER: #{board.current_player().upcase()}")
 
 
