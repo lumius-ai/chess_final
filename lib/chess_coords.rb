@@ -1,5 +1,7 @@
 # Module containing the functions to convert between chess board coordinates and array coordinates
+
 require "pry-byebug"
+
 module ChessCoords
   COLUMNS = {'A' => 0,
   'B' => 1,
@@ -76,9 +78,7 @@ module ChessCoords
       board: board, 
       origin: pos,
       curr_pos: pos
-
     }
-
 
     for i in 0...4
       args[:mode] = i
@@ -238,7 +238,7 @@ module ChessCoords
     mode = args[:mode]
     board = args[:board]
     origin = args[:origin]
-    curr_pos = board_to_array(args[:curr_pos])
+    curr_pos = args[:curr_pos]
 
     moves = []
 
@@ -279,14 +279,16 @@ module ChessCoords
 
     # left
     when 3
-      if (col - 1) < 0 or board[row][col] != '.'
+
+      if (col - 1) < 0 or board[row][col] != '.' and curr_pos != origin
         return moves
       else
         args[:curr_pos] = array_to_board([row, (col - 1)])
         moves += calc_line(args)
       end 
     end
-
+    
+    args[:curr_pos] = args[:origin]
     return moves
   end
 end
