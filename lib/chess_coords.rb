@@ -11,6 +11,7 @@ module ChessCoords
   'H' => 7
   }
 
+  DEFAULT_BOARD = Array.new(8) {Array.new(8, '.')}
   # Convert a board notation position into a 2 digit row-column array
   def board_to_array(str)
 
@@ -48,21 +49,40 @@ module ChessCoords
   end
 
   # Gets all diagonal squares relative to current position
-  def get_diagonals(pos)
+  def get_diagonals(pos, board)
     moves = []
 
+    args = {
+      mode:  0,
+      board: board, 
+      origin: pos,
+      curr_pos: pos
+
+    }
+
     for i in 0...4
-      moves += calc_diagonal(i, pos)
+      args[:mode] = i
+      moves += calc_diagonal(args)
     end
     return moves
   end
 
   # Gets the rook moves for a given position
-  def get_cross(pos)
+  def get_cross(pos, board)
     moves = []
 
+    args = {
+      mode:  0,
+      board: board, 
+      origin: pos,
+      curr_pos: pos
+
+    }
+
+
     for i in 0...4
-      moves += calc_line(i, pos)
+      args[:mode] = i
+      moves += calc_line(args)
     end
 
     return moves
@@ -117,7 +137,7 @@ module ChessCoords
   end
 
   # Gets all pawn moves relative to position
-  def get_pawn(pos, player, color)
+  def get_pawn(pos, player, color, board = DEFAULT_BOARD)
     moves = []
     coords = board_to_array(pos)
     row = coords[0]
@@ -127,25 +147,29 @@ module ChessCoords
     when "W"
       if color == 'W'
         moves.append([row - 1, column]) if (row - 1) >= 0
-        moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0
-        moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8
+
+        moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0 and board[row - 1][column - 1] != '.'
+        moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8 and board[row - 1][column + 1] != '.'
 
 
       else
         moves.append([row + 1, column]) if (row + 1) < 8
-        moves.append([row + 1, column + 1]) if (row + 1) < 8 and (column + 1) < 8
-        moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0
+
+        moves.append([row + 1, column + 1]) if (row + 1) < 8 and (column + 1) < 8 and board[row + 1][column + 1] != '.'
+        moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0 and board[row + 1][column - 1] != '.'
       end
 
     when "B"
       if color == 'W'
         moves.append([row + 1, column]) if (row + 1) < 8
-        moves.append([row + 1, column + 1]) if (row + 1) < 8 and (column + 1) < 8
-        moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0
+
+        moves.append([row + 1, column + 1]) if (row + 1) < 8 and (column + 1) < 8 and board[row + 1][column + 1] != '.'
+        moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0 and board[row + 1][column - 1] != '.'
       else
         moves.append([row - 1, column]) if (row - 1) >= 0
-        moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0
-        moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8
+
+        moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0 and board[row - 1][column - 1] != '.'
+        moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8 and board[row - 1][column + 1] != '.'
 
       end
     end
@@ -154,7 +178,12 @@ module ChessCoords
   end
 
   # Calculates possible tiles in a diagonal from current position
-  def calc_diagonal(mode = 0, curr_pos)
+  def calc_diagonal(args={})
+    mode = args[:mode]
+    board = args[:board]
+    origin = args[:origin]
+    curr_pos = board_to_array(args[:curr_pos])
+    
     moves = []
     coord = board_to_array(curr_pos)
     row = coord[0]
@@ -165,34 +194,38 @@ module ChessCoords
     case mode
     # +1 +1 bottom right
     when 0
-      if ((row + 1) > 7) or ((col + 1) > 7)
+      if ((row + 1) > 7) or ((col + 1) > 7) or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
-        moves += calc_diagonal(mode, array_to_board([row + 1, col + 1]))
+        args[:curr_pos] = array_to_board([row + 1, col + 1])
+        moves += calc_diagonal(args)
       end
 
     # -1 -1 top left
     when 1
-      if ((row - 1) < 0) or ((col - 1) < 0)
+      if ((row - 1) < 0) or ((col - 1) < 0) or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
-        moves += calc_diagonal(mode, array_to_board([row - 1, col - 1 ]))
+        args[:curr_pos] = array_to_board([row - 1, col - 1])
+        moves += calc_diagonal(args)
       end
     
     # +1 -1 bottom left
     when 2
-      if((row + 1) > 7) or ((col - 1) < 0)
+      if((row + 1) > 7) or ((col - 1) < 0) or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
-        moves += calc_diagonal(mode, array_to_board([row + 1, col - 1 ]))
+        args[:curr_pos] = array_to_board([row + 1, col - 1])
+        moves += calc_diagonal(args)
       end
 
     #-1 +1 top right
     when 3
-      if((row - 1) < 0) or ((col + 1) > 7)
+      if((row - 1) < 0) or ((col + 1) > 7) or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
-        moves += calc_diagonal(mode, array_to_board([row - 1, col + 1]))
+        args[:curr_pos] = array_to_board([row - 1, col + 1])
+        moves += calc_diagonal(args)
       end
     end
 
@@ -200,8 +233,15 @@ module ChessCoords
   end
 
   # Calculates possible tiles in straight lines relative to position
-  def calc_line(mode=0, curr_pos)
+  # def calc_line(mode=0, board=DEFAULT_BOARD, origin="A7", curr_pos)
+  def calc_line(args={})
+    mode = args[:mode]
+    board = args[:board]
+    origin = args[:origin]
+    curr_pos = board_to_array(args[:curr_pos])
+
     moves = []
+
     coord = board_to_array(curr_pos)
 
     row = coord[0]
@@ -214,32 +254,36 @@ module ChessCoords
 
     # up
     when 0
-      if (row + 1) > 7
+      if (row + 1) > 7 or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
-        moves += calc_line(mode, array_to_board([(row + 1), col]))
+        args[:curr_pos] = array_to_board([(row + 1), col])
+        moves += calc_line(args)
       end
     # down
     when 1
-      if (row - 1) < 0
+      if (row - 1) < 0 or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
-        moves += calc_line(mode, array_to_board([(row - 1), col]))
+        args[:curr_pos] = array_to_board([(row - 1), col])
+        moves += calc_line(args)
       end
     # right
     when 2
-      if (col + 1) > 7
+      if (col + 1) > 7 or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
-        moves += calc_line(mode, array_to_board([row, (col + 1)]))
+        args[:curr_pos] = array_to_board([row, (col + 1)])
+        moves += calc_line(args)
       end
 
     # left
     when 3
-      if (col - 1) < 0
+      if (col - 1) < 0 or board[row][col] != '.'
         return moves
       else
-        moves += calc_line(mode, array_to_board([row, (col - 1)]))
+        args[:curr_pos] = array_to_board([row, (col - 1)])
+        moves += calc_line(args)
       end 
     end
 

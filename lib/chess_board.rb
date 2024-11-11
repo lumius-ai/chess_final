@@ -117,17 +117,17 @@ class ChessBoard
       moves = get_pawn(p, @player, piece.color)
 
     when 'rook'
-      moves = get_cross(p)
+      moves = get_cross(p, @board)
 
     when 'knight'
       moves = get_knight(p)
 
     when 'bishop'
-      moves = get_diagonals(p)
+      moves = get_diagonals(p, @board)
 
     when 'queen'
-      diags = get_diagonals(p)
-      cross = get_cross(p)
+      diags = get_diagonals(p, @board)
+      cross = get_cross(p, @board)
 
       moves = diags + cross
 
