@@ -56,7 +56,7 @@ class ChessBoard
     # Update moved piece's postion and possible moves
     p = select_piece(destination)
     p.position = destination
-    update_moves(p)
+    update_all()
     # Source set to default
     @board[source_array[0]][source_array[1]] = "."
 
@@ -105,16 +105,27 @@ class ChessBoard
 
   # private
   
-
+  # Updates the moves of ALL pieces on the board
+  def update_all()
+    @board.each do |row|
+      row.each do |tile|
+        update_moves(tile)
+      end
+    end
+  end
   # Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
   def update_moves(piece)
+    if piece.class() == String
+      return
+    end
+
     p = piece.position
     moves = []
 
 
     case piece.name
     when 'pawn'
-      moves = get_pawn(p, @player, piece.color)
+      moves = get_pawn(p, @player, piece.color, @board)
 
     when 'rook'
       moves = get_cross(p, @board)
@@ -160,7 +171,7 @@ class ChessBoard
     @board[row][column] = piece
 
     # Calculate its valid moves
-    update_moves(piece)
+    update_all()
     
   end
   

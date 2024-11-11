@@ -148,6 +148,8 @@ module ChessCoords
       if color == 'W'
         moves.append([row - 1, column]) if (row - 1) >= 0
 
+        # binding.pry
+
         moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0 and board[row - 1][column - 1] != '.'
         moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8 and board[row - 1][column + 1] != '.'
 
@@ -182,7 +184,7 @@ module ChessCoords
     mode = args[:mode]
     board = args[:board]
     origin = args[:origin]
-    curr_pos = board_to_array(args[:curr_pos])
+    curr_pos = args[:curr_pos]
     
     moves = []
     coord = board_to_array(curr_pos)
@@ -229,6 +231,7 @@ module ChessCoords
       end
     end
 
+    args[:curr_pos] = args[:origin]
     return moves
   end
 
@@ -252,7 +255,7 @@ module ChessCoords
 
     case mode
 
-    # up
+    # down
     when 0
       if (row + 1) > 7 or (board[row][col] != '.' and curr_pos != origin)
         return moves
@@ -260,8 +263,12 @@ module ChessCoords
         args[:curr_pos] = array_to_board([(row + 1), col])
         moves += calc_line(args)
       end
-    # down
+    # up
     when 1
+      #TEST
+      if curr_pos == "D7"
+        # binding.pry
+      end
       if (row - 1) < 0 or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
