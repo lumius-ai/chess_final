@@ -4,6 +4,7 @@ require_relative("chess_coords")
 
 # TEST remove
 require("pry-byebug")
+
 class ChessBoard
   include ChessCoords
 
@@ -49,19 +50,22 @@ class ChessBoard
     source_array = board_to_array(source)
     dest_array = board_to_array(destination)
 
-    # TODO: Check if this is a valid move
-    
-    # Destination = source
-    @board[dest_array[0]][dest_array[1]] = @board[source_array[0]][source_array[1]]
-    # Update moved piece's postion and possible moves
-    p = select_piece(destination)
-    p.position = destination
-    update_all()
-    # Source set to default
-    @board[source_array[0]][source_array[1]] = "."
-
-    # Other player's move now
-    @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
+    # Check if this is a valid move
+    if move_valid?(source, destination)
+      # Destination = source
+      @board[dest_array[0]][dest_array[1]] = @board[source_array[0]][source_array[1]]
+      # Update moved piece's postion and possible moves
+      p = select_piece(destination)
+      p.position = destination
+      update_all()
+      # Source set to default
+      @board[source_array[0]][source_array[1]] = "."
+      # Other player's move now
+      @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
+      return 0
+    else
+      return 1
+    end 
   end
 
   # TEST REMOVE LATER
@@ -148,8 +152,17 @@ class ChessBoard
     else
       moves = []
     end
+
     moves = moves.map {|e| array_to_board(e)}
+    # Delete self and other pieces of the same colot
     moves.delete(p)
+    moves.each do |move|
+      p = select_piece(move)
+
+      if p.class == ChessPiece and p.color == piece.color
+        moves.delete(move)
+      end
+    end
 
     # update piece moves
     piece.moves = moves
@@ -203,32 +216,22 @@ class ChessBoard
     end
   end
 
+  # Check if move from src to dst is valid
+  def move_valid?(src, dst)
+    return (source_valid?(src) and destination_valid?(src, dest))
+  end
 
   # Checks if destination is valid based on current player, takes array
-  def destination_valid?(arr)
-    piece = select_piece(array_to_board(arr))
-
-    if piece == '.'
-      return true
-    elsif piece.color != @current_player
-      return true
-    else
-      return false
-    end
-
+  def destination_valid?(src, dst)
+    piece = select_piece(src)
+    return piece.moves.include?(dst)
   end
 
   # TODO: test these
   # Checks if source coord is valid based on current player, takes array
-  def source_valid?(arr)
-    piece = select_piece(array_to_board(arr))
-
-    if piece != '.' and piece.color == @current_player
-      return true
-    else
-      return false
-    end
-
+  def source_valid?(pos)
+    piece = select_piece(pos)
+    (piece.class() == ChessPiece and piece.color == @current_player) ? true : false
   end
 
   # Return T if current player's king is in check
