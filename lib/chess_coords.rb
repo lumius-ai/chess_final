@@ -217,21 +217,21 @@ module ChessCoords
       if (row + 1) > 7
         return moves
       else
-        moves += get_line(mode, array_to_board([(row + 1), col]))
+        moves += calc_line(mode, array_to_board([(row + 1), col]))
       end
     # down
     when 1
       if (row - 1) < 0
         return moves
       else
-        moves += get_line(mode, array_to_board([(row - 1), col]))
+        moves += calc_line(mode, array_to_board([(row - 1), col]))
       end
     # right
     when 2
       if (col + 1) > 7
         return moves
       else
-        moves += get_line(mode, array_to_board([row, (col + 1)]))
+        moves += calc_line(mode, array_to_board([row, (col + 1)]))
       end
 
     # left
@@ -239,7 +239,7 @@ module ChessCoords
       if (col - 1) < 0
         return moves
       else
-        moves += get_line(mode, array_to_board([row, (col - 1)]))
+        moves += calc_line(mode, array_to_board([row, (col - 1)]))
       end 
     end
 
