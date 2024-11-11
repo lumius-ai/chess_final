@@ -2,6 +2,8 @@
 require_relative("chess_piece")
 require_relative("chess_coords")
 
+# TEST remove
+require("pry-byebug")
 class ChessBoard
   include ChessCoords
 
@@ -14,11 +16,12 @@ class ChessBoard
   # Constructor
   def initialize(args={})
     args['current_player'].nil? ? @current_player = "w" : @current_player = args['current_player']
-    args['player'].nil? ? ChessPiece.set_player('W') : Chesspiece.set_player(args['player'])
+    args['player'].nil? ? @player = 'W' : @player = args['player']
 
     @board = Array.new(8) {Array.new(8, '.')}
 
-    @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
+    # TEST undo this
+    # @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
 
   end
 
@@ -109,7 +112,7 @@ class ChessBoard
     moves = []
 
 
-    case @name
+    case piece.name
     when 'pawn'
       moves = get_pawn(p, @player, piece.color)
 

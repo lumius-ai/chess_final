@@ -43,8 +43,6 @@ class ChessPiece
     else
       @icon = 'X'
     end
-
-    self.update_moves()
   end
 
   # To_string
