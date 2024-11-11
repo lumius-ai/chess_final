@@ -52,6 +52,9 @@ class ChessBoard
     @board[dest_array[0]][dest_array[1]] = @board[source_array[0]][source_array[1]]
     # Source set to default
     @board[source_array[0]][source_array[1]] = "."
+
+    # Other player's move now
+    @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
   end
 
   # TEST REMOVE LATER
@@ -93,7 +96,7 @@ class ChessBoard
 
   end
 
-  private
+  # private
   # Create a specified piece and place it at the given position
   def place_piece(args={})
     args['name'].nil? ? name = "pawn" : name = args['name']
@@ -140,13 +143,29 @@ class ChessBoard
   end
 
 
-  # Checks if destination is valid based on current player
-  def destination_valid?(coord)
+  # Checks if destination is valid based on current player, takes array
+  def destination_valid?(arr)
+    piece = select_piece(array_to_board(arr))
+
+    if piece == '.'
+      return true
+    elsif piece.color != @current_player
+      return true
+    else
+      return false
+    end
 
   end
 
-  # Checks if source coord is valid based on current player
-  def source_valid?(coord)
+  # Checks if source coord is valid based on current player, takes array
+  def source_valid?(arr)
+    piece = select_piece(array_to_board(arr))
+
+    if piece != '.' and piece.color == @current_player
+      return true
+    else
+      return false
+    end
 
   end
 

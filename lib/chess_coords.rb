@@ -51,35 +51,20 @@ module ChessCoords
   def get_diagonals(pos)
     moves = []
 
-    moves += calc_diagonal(0, pos)
-    moves += calc_diagonal(1, pos)
-    moves += calc_diagonal(2, pos)
-    moves += calc_diagonal(3, pos)
-
+    for i in 0...4
+      moves += calc_diagonal(i, pos)
+    end
     return moves
   end
 
   # Gets the rook moves for a given position
   def get_cross(pos)
     moves = []
-    coords = board_to_array(pos)
-    row = coords[0]
-    column = coords[1]
 
-    # Vertical tiles
-    for i in row...8
-      moves.append([i, column])
+    for i in 0...4
+      moves += calc_line(i, pos)
     end
-    for i in 0...row
-      moves.append([i, column])
-    end
-    # Horizontal tiles
-    for i in column...8
-      moves.append([row, i])
-    end
-    for i in 0...column
-      moves.append([row, i])
-    end
+
     return moves
   end
 
@@ -209,6 +194,53 @@ module ChessCoords
       else
         moves += calc_diagonal(mode, array_to_board([row - 1, col + 1]))
       end
+    end
+
+    return moves
+  end
+
+  # Calculates possible tiles in straight lines relative to position
+  def calc_line(mode=0, curr_pos)
+    moves = []
+    coord = board_to_array(curr_pos)
+
+    row = coord[0]
+    col = coord[1]
+
+    # Function
+    moves.append(curr_pos)
+
+    case mode
+
+    # up
+    when 0
+      if (row + 1) > 7
+        return moves
+      else
+        moves += get_line(mode, array_to_board([(row + 1), col]))
+      end
+    # down
+    when 1
+      if (row - 1) < 0
+        return moves
+      else
+        moves += get_line(mode, array_to_board([(row - 1), col]))
+      end
+    # right
+    when 2
+      if (col + 1) > 7
+        return moves
+      else
+        moves += get_line(mode, array_to_board([row, (col + 1)]))
+      end
+
+    # left
+    when 3
+      if (col - 1) < 0
+        return moves
+      else
+        moves += get_line(mode, array_to_board([row, (col - 1)]))
+      end 
     end
 
     return moves

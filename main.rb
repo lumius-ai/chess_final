@@ -1,10 +1,11 @@
 require_relative "lib/chess_board"
 require_relative "lib/chess_piece"
 
-POS = 'D4'
+POS = 'D5'
 
-arg = {'name' => 'queen', 'position' => POS, 'color' => "W", 'player' => "W"}
+arg = {'name' => 'pawn', 'position' => POS, 'color' => "B", 'player' => "W"}
 board = ChessBoard.new()
+board.clear()
 board.place_piece(arg)
 board.visualise(POS)
 puts(board)
