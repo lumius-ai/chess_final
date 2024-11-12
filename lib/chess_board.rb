@@ -1,6 +1,7 @@
 # Chess board
 require_relative("chess_piece")
 require_relative("chess_coords")
+
 require("json")
 
 # TEST remove
@@ -21,10 +22,8 @@ class ChessBoard
     args['player'].nil? ? @player = 'W' : @player = args['player']
     args['board'].nil? ? @board = Array.new(8) {Array.new(8, '.')} : @board = args['board']
 
-    # @board = Array.new(8) {Array.new(8, '.')}
-
     # TEST undo this
-    # @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
+    @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
 
   end
 
@@ -100,24 +99,24 @@ class ChessBoard
   end
 
   # Saves game state to JSON
-  def save_game
+  def save_game()
     Dir.mkdir("sav") unless Dir.exist?("sav")
     if File.exist?("/sav/savegame.json")
       f = File.open("/sav/savegame.json", "w")
     else
-      f = File.new("sav/savegame.json", "W")
+      f = File.new("sav/savegame.json", "w")
     end
-
-    data = to_json()
+    data = self.to_json()
     f.write(data)
     f.close
   end
 
-  # Loads game state from JSON
+
+  # Loads game state from YAML
   def self.load_game
-    if Dir.exist?("sav") and File.exist?("sav/savegame.json")
-      f = File.open("sav/savegame.json", "w")
-      data = from_json(f.read())
+    if Dir.exist?("sav") and File.exist?("sav/savegame.yaml")
+      f = File.open("sav/savegame.yaml", "r")
+      data = from_yaml(f.read())
 
       args = {
         'board' => data['board'],
@@ -155,7 +154,7 @@ class ChessBoard
       moves = get_pawn(p, @player, piece.color, @board)
 
     when 'rook'
-      moves = get_cross(p, @board)
+        moves = get_cross(p, @board)
 
     when 'knight'
       moves = get_knight(p)
@@ -268,19 +267,19 @@ class ChessBoard
   end
 
   # Serialization
-  def to_json
-    JSON.dump({
-      'board' => @board,
-      'current_player' => @current_player,
-      'player' => @player
-    })
-
+  def to_json(options={})
+    JSON.dump(
+      {
+        :current_player => @current_player,
+        :board => @board,
+        :player => @player
+      }
+    )
   end
 
   # Deserialization
-  def from_json(s)
-    data = JSON.load(s)
-    return data
+  def self.deserialize(serial_str)
+    return YAML.load(serial_str)
   end
 
 end

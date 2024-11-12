@@ -79,7 +79,6 @@ module ChessCoords
       origin: pos,
       curr_pos: pos
     }
-
     for i in 0...4
       args[:mode] = i
       moves += calc_line(args)
@@ -287,7 +286,7 @@ module ChessCoords
     # left
     when 3
 
-      if (col - 1) < 0 or board[row][col] != '.' and curr_pos != origin
+      if (col - 1) < 0 or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else
         args[:curr_pos] = array_to_board([row, (col - 1)])

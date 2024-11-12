@@ -2,6 +2,8 @@
 
 require_relative('chess_coords')
 
+require('json')
+
 class ChessPiece
   attr_reader :icon, :color, :name
   attr_accessor :position, :moves
@@ -34,6 +36,7 @@ class ChessPiece
     args['color'].nil? ? @color = 'W' : @color = args['color']
     args['name'].nil? ? @name = 'pawn': @name = args['name']
     args['position'].nil? ? @position = 'E5' : @position = args['position']
+    args['moves'].nil? ? @moves = [] : @moves = args['moves']
 
     case @color.upcase
     when "W"
@@ -50,5 +53,20 @@ class ChessPiece
     return @icon
   end
   
+  # Serialization
+  def to_json(options = {})
+    JSON.dump({
+      :icon => @icon,
+      :color => @color,
+      :name => @name,
+      :position => @position,
+      :moves => @moves
+    })
+  end
+
+  # Deserialization
+  def self.from_json(serial_str)
+    return JSON.load(serial_str)
+  end
 
 end

@@ -1,24 +1,15 @@
 require_relative "lib/chess_board"
 require_relative "lib/chess_piece"
 
+require_relative("lib/testclass")
+
 POS = 'D5'
 
-arg = {'name' => 'pawn', 'position' => POS, 'color' => "W", 'player' => "W"}
+arg = {'name' => 'king', 'position' => POS, 'color' => "W", 'player' => "W"}
 board = ChessBoard.new()
-board.place_piece(arg)
+board.to_json()
 
-# blockers
-name = 'knight'
-board.place_piece({'name' => name, 'position' => "E6", 'color' => "B", 'player' => "B"})
-# board.place_piece({'name' => name, 'position' => "F6", 'color' => "W", 'player' => "W"})
-# board.place_piece({'name' => name, 'position' => "C3", 'color' => "B", 'player' => "W"})
-# board.place_piece({'name' => name, 'position' => "E3", 'color' => "W", 'player' => "W"})
 
-# board.visualise(POS)
-puts(board)
-board.visualise(POS)
-puts(board)
 
-puts("PLAYER: #{board.current_player().upcase()}")
 
 
