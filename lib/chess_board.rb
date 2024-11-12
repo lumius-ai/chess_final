@@ -10,7 +10,7 @@ require("pry-byebug")
 class ChessBoard
   include ChessCoords
 
-  attr_reader :current_player, :board, :player
+  attr_reader :current_player, :board, :player, :wking_pos, :bking_pos
 
   @@LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"]
   @@PIECES = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"]
@@ -23,9 +23,19 @@ class ChessBoard
  
     if args['board'].nil?
       @board = Array.new(8) {Array.new(8, '.')}
-      @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
+      if @current_player.upcase() == 'W'
+        @wking_pos = "E1"
+        @bking_pos = "E8"
+        place_pieces('W')
+      else
+        @wking_pos = "E8"
+        @bking_pos = "E1"
+        place_pieces('B')
+      end 
     else
       @board = args['board']
+      @wking_pos = args['wking_pos']
+      @bking_pos = args['bking_pos']
     end
 
 
@@ -168,6 +178,7 @@ class ChessBoard
 
     when 'king'
       moves = get_king(p)
+      piece.color == 'b'? @bking_pos = piece.position : @wking_pos = piece.position
 
     else
       moves = []
@@ -247,16 +258,26 @@ class ChessBoard
     return (src != dst and piece.moves.include?(dst))
   end
 
-  # TODO: test these
   # Checks if source coord is valid based on current player, takes array
   def source_valid?(pos)
     piece = select_piece(pos)
     (piece.class() == ChessPiece and piece.color == @current_player.upcase()) ? true : false
   end
 
-  # Return T if current player's king is in check
-  def is_check?()
-
+  # Return W if the white king is in check , B if the black king is in check, nil if no check
+  def is_check()
+    @board.each do |row|
+      row.each do |e|
+        if e.class = ChessPiece
+          if e.color.upcase() == 'B' and e.moves.include?(@wking_pos)
+            return 'W'
+          elsif e.color.upcase() == 'W' and e.moves.include?(@bking_pos)
+            return 'B'
+          end
+        end
+      end
+    end
+    return nil
   end
 
   # Return T if current player's king is in checkmate
@@ -270,16 +291,18 @@ class ChessBoard
       {
         :current_player => @current_player,
         :board => @board,
-        :player => @player
+        :player => @player,
+        :wking_pos => @wking_pos,
+        :bking_pos => @bking_pos
+
       }
     )
   end
 
   # Deserialization
   def self.from_json(serial_str)
-    data = JSON.load(serial_str)
-    player = data['current_player']
-    board = data['board']
+    args = JSON.load(serial_str)
+    board = args['board']
     
     board.map! do |row|
       row.map! do |element|
@@ -290,7 +313,8 @@ class ChessBoard
         end
       end
     end
+    args['board'] = board
 
-    return ChessBoard.new('player' => player, 'board' => board)
+    return ChessBoard.new(args)
   end
 end
