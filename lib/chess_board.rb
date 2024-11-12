@@ -20,10 +20,14 @@ class ChessBoard
   def initialize(args={})
     args['current_player'].nil? ? @current_player = "w" : @current_player = args['current_player']
     args['player'].nil? ? @player = 'W' : @player = args['player']
-    args['board'].nil? ? @board = Array.new(8) {Array.new(8, '.')} : @board = args['board']
+ 
+    if args['board'].nil?
+      @board = Array.new(8) {Array.new(8, '.')}
+      @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
+    else
+      @board = args['board']
+    end
 
-    # TEST undo this
-    @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
 
   end
 
@@ -114,16 +118,10 @@ class ChessBoard
 
   # Loads game state from YAML
   def self.load_game
-    if Dir.exist?("sav") and File.exist?("sav/savegame.yaml")
-      f = File.open("sav/savegame.yaml", "r")
-      data = from_yaml(f.read())
-
-      args = {
-        'board' => data['board'],
-        'current_player' => data['current_player'],
-        'player' => data['player']
-      }
-      return ChessBoard.new(args)
+    if Dir.exist?("sav") and File.exist?("sav/savegame.json")
+      f = File.open("sav/savegame.json", "r")
+      obj = ChessBoard.from_json(f.read())
+      return obj
     else
       return nil
     end
@@ -283,9 +281,14 @@ class ChessBoard
     player = data['current_player']
     board = data['board']
     
-    board = board.map do |row|
-      row = row.map(){|e| return ChessPiece.from_json(e) if e.class() != String}
-      return row
+    board.map! do |row|
+      row.map! do |element|
+        if not element.is_a?(String)
+          ChessPiece.new(element)
+        else
+          '.'
+        end
+      end
     end
 
     return ChessBoard.new('player' => player, 'board' => board)
