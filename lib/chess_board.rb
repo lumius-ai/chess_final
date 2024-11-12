@@ -1,6 +1,7 @@
 # Chess board
 require_relative("chess_piece")
 require_relative("chess_coords")
+require("json")
 
 # TEST remove
 require("pry-byebug")
@@ -18,8 +19,9 @@ class ChessBoard
   def initialize(args={})
     args['current_player'].nil? ? @current_player = "w" : @current_player = args['current_player']
     args['player'].nil? ? @player = 'W' : @player = args['player']
+    args['board'].nil? ? @board = Array.new(8) {Array.new(8, '.')} : @board = args['board']
 
-    @board = Array.new(8) {Array.new(8, '.')}
+    # @board = Array.new(8) {Array.new(8, '.')}
 
     # TEST undo this
     # @current_player.upcase() == 'W'? place_pieces('W') : place_pieces('B')
@@ -99,12 +101,33 @@ class ChessBoard
 
   # Saves game state to JSON
   def save_game
+    Dir.mkdir("sav") unless Dir.exist?("sav")
+    if File.exist?("/sav/savegame.json")
+      f = File.open("/sav/savegame.json", "w")
+    else
+      f = File.new("sav/savegame.json", "W")
+    end
 
+    data = to_json()
+    f.write(data)
+    f.close
   end
 
   # Loads game state from JSON
-  def load_game
+  def self.load_game
+    if Dir.exist?("sav") and File.exist?("sav/savegame.json")
+      f = File.open("sav/savegame.json", "w")
+      data = from_json(f.read())
 
+      args = {
+        'board' => data['board'],
+        'current_player' => data['current_player'],
+        'player' => data['player']
+      }
+      return ChessBoard.new(args)
+    else
+      return nil
+    end
   end
 
   # private
@@ -154,7 +177,7 @@ class ChessBoard
     end
 
     moves = moves.map {|e| array_to_board(e)}
-    # Delete self and other pieces of the same colot
+    # Delete self and other pieces of the same color
     moves.delete(p)
     moves.each do |move|
       p = select_piece(move)
@@ -246,12 +269,18 @@ class ChessBoard
 
   # Serialization
   def to_json
+    JSON.dump({
+      'board' => @board,
+      'current_player' => @current_player,
+      'player' => @player
+    })
 
   end
 
   # Deserialization
-  def from_json
-
+  def from_json(s)
+    data = JSON.load(s)
+    return data
   end
 
 end
