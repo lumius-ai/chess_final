@@ -7,7 +7,14 @@ POS = 'D5'
 
 arg = {'name' => 'king', 'position' => POS, 'color' => "W", 'player' => "W"}
 board = ChessBoard.new()
-board.to_json()
+piece = ChessPiece.new(arg)
+
+s = board.to_json()
+
+d = ChessBoard.from_json(s)
+
+puts(s)
+puts(d)
 
 
 

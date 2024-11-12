@@ -66,7 +66,9 @@ class ChessPiece
 
   # Deserialization
   def self.from_json(serial_str)
-    return JSON.load(serial_str)
+    args = JSON.load(serial_str)
+    p = ChessPiece.new(args)
+    return p
   end
 
 end

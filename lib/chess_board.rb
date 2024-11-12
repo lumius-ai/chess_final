@@ -278,8 +278,16 @@ class ChessBoard
   end
 
   # Deserialization
-  def self.deserialize(serial_str)
-    return YAML.load(serial_str)
-  end
+  def self.from_json(serial_str)
+    data = JSON.load(serial_str)
+    player = data['current_player']
+    board = data['board']
+    
+    board = board.map do |row|
+      row = row.map(){|e| return ChessPiece.from_json(e) if e.class() != String}
+      return row
+    end
 
+    return ChessBoard.new('player' => player, 'board' => board)
+  end
 end
