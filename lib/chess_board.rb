@@ -72,11 +72,13 @@ class ChessBoard
       # Update moved piece's postion and possible moves
       p = select_piece(destination)
       p.position = destination
-      update_all()
+      
       # Source set to default
       @board[source_array[0]][source_array[1]] = "."
+      update_all()
       # Other player's move now
       @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
+      
       return 0
     else
       return 1
@@ -141,13 +143,12 @@ class ChessBoard
   
   # Updates the moves of ALL pieces on the board
   def update_all()
+    # Update all moves
     @board.each do |row|
       row.each do |tile|
         update_moves(tile)
       end
     end
-
-    check_filter()
   end
 
   # Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
@@ -181,7 +182,7 @@ class ChessBoard
 
     when 'king'
       moves = get_king(p)
-      piece.color == 'b'? @bking_pos = piece.position : @wking_pos = piece.position
+      piece.color == 'B'? @bking_pos = piece.position : @wking_pos = piece.position
 
     else
       moves = []
@@ -219,6 +220,7 @@ class ChessBoard
 
     # Calculate its valid moves
     update_all()
+    check_filter()
     
   end
   
@@ -288,6 +290,8 @@ class ChessBoard
     black = self.select_piece(@bking_pos)
     white = self.select_piece(@wking_pos)
 
+    # binding.pry
+
     if self.is_check() == 'B' and black.moves == []
       return 'B'
     elsif self.is_check() == 'W' and white.moves == []
@@ -338,18 +342,7 @@ class ChessBoard
   
   # For each piece on the board, filter out moves that would result in checkmate
   def check_filter()
-    # Hypothetical board
-    b = ChessBoard.copy(self)
-
-    p = get_pieces(@board)
-
-    p.each do |piece|
-      piece.moves.each do |pos|
-        b.force_move(p.position, pos)
-        piece.moves.delete(pos) if b.is_check() == piece.color
-        b.force_move(pos, p.position)
-      end
-    end     
+  
   end
 
   # Moves piece without checking validity
@@ -358,15 +351,19 @@ class ChessBoard
     source_array = board_to_array(source)
     dest_array = board_to_array(destination)
 
- 
+
     # Destination = source
     @board[dest_array[0]][dest_array[1]] = @board[source_array[0]][source_array[1]]
     # Update moved piece's postion and possible moves
     p = select_piece(destination)
     p.position = destination
-    update_all()
+      
     # Source set to default
     @board[source_array[0]][source_array[1]] = "."
+    update_all()
+    # Other player's move now
+    @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
+      
   end
 
   # Get all pieces on the board
