@@ -264,10 +264,6 @@ module ChessCoords
       end
     # up
     when 1
-      #TEST
-      if curr_pos == "D7"
-        # binding.pry
-      end
       if (row - 1) < 0 or (board[row][col] != '.' and curr_pos != origin)
         return moves
       else

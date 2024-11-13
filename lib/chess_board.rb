@@ -23,7 +23,7 @@ class ChessBoard
  
     if args['board'].nil?
       @board = Array.new(8) {Array.new(8, '.')}
-      if @current_player.upcase() == 'W'
+      if @player.upcase() == 'W'
         @wking_pos = "E1"
         @bking_pos = "E8"
         place_pieces('W')
@@ -147,6 +147,7 @@ class ChessBoard
       end
     end
   end
+
   # Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
   def update_moves(piece)
     if piece.class() == String
@@ -268,7 +269,7 @@ class ChessBoard
   def is_check()
     @board.each do |row|
       row.each do |e|
-        if e.class = ChessPiece
+        if e.class == ChessPiece
           if e.color.upcase() == 'B' and e.moves.include?(@wking_pos)
             return 'W'
           elsif e.color.upcase() == 'W' and e.moves.include?(@bking_pos)
@@ -325,5 +326,33 @@ class ChessBoard
     args['board'] = board
 
     return ChessBoard.new(args)
+  end
+
+  # Copy object
+  def self.copy(chessboard)
+    return ChessBoard.from_json(chessboard.to_json)
+  end
+
+  
+  # For each piece on the board, filter out moves that would result in checkmate
+  def filter()
+
+  end
+
+  # Moves piece without checking validity
+  def force_move(source, destination)
+    # Convert from board notation to array coords
+    source_array = board_to_array(source)
+    dest_array = board_to_array(destination)
+
+ 
+    # Destination = source
+    @board[dest_array[0]][dest_array[1]] = @board[source_array[0]][source_array[1]]
+    # Update moved piece's postion and possible moves
+    p = select_piece(destination)
+    p.position = destination
+    update_all()
+    # Source set to default
+    @board[source_array[0]][source_array[1]] = "."
   end
 end

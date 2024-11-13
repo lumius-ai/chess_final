@@ -1,22 +1,31 @@
 require_relative "lib/chess_board"
 require_relative "lib/chess_piece"
 
-require_relative("lib/testclass")
 
-POS = 'D5'
+king = {'name' => 'king', 'position' => "E1", 'color' => "W"}
+king2 = {'name' => 'king', 'position' => "E8", 'color' => "B"}
 
-arg = {'name' => 'king', 'position' => POS, 'color' => "W", 'player' => "W"}
-board = ChessBoard.new()
-board.move_piece("G1", "F3")
-board.move_piece("B8", "C6")
-board.save_game()
-board.move_piece("B1", "C3")
+rook = {'name' => 'rook', 'position' => "A2", 'color' => "B"}
+knight = {'name' => 'knight', 'position' => "E4", 'color' => "B"}
+bishop = {'name' => 'bishop', 'position' => "G4", 'color' => "B"}
+
+
+# Black to move King in check
+board = ChessBoard.new({'current_player' => 'b'})
+board.clear()
+board.place_piece(king)
+board.place_piece(king2)
+board.place_piece(rook)
+board.place_piece(knight)
+board.place_piece(bishop)
 puts(board)
 
-b2 = ChessBoard.load_game()
-puts(b2)
+o = ChessBoard.copy(board)
+puts(o)
 
-# puts(s)
+
+
+
 
 
 
