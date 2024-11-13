@@ -146,6 +146,8 @@ class ChessBoard
         update_moves(tile)
       end
     end
+
+    check_filter()
   end
 
   # Clears valid moves and calculates all POSSIBLE (not necessarily valid) squares to go in. (Board notation)
@@ -335,8 +337,19 @@ class ChessBoard
 
   
   # For each piece on the board, filter out moves that would result in checkmate
-  def filter()
+  def check_filter()
+    # Hypothetical board
+    b = ChessBoard.copy(self)
 
+    p = get_pieces(@board)
+
+    p.each do |piece|
+      piece.moves.each do |pos|
+        b.force_move(p.position, pos)
+        piece.moves.delete(pos) if b.is_check() == piece.color
+        b.force_move(pos, p.position)
+      end
+    end     
   end
 
   # Moves piece without checking validity
@@ -354,5 +367,19 @@ class ChessBoard
     update_all()
     # Source set to default
     @board[source_array[0]][source_array[1]] = "."
+  end
+
+  # Get all pieces on the board
+  def get_pieces(board)
+    p = []
+
+    board.each do |row|
+      row.each do |e|
+        if e.is_a?(ChessPiece)
+          p.append(e)
+        end
+      end
+    end
+    return p
   end
 end

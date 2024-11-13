@@ -20,7 +20,7 @@ board.place_piece(knight)
 board.place_piece(bishop)
 puts(board)
 
-o = ChessBoard.copy(board)
+
 puts(o)
 
 
