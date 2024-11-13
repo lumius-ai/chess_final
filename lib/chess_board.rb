@@ -281,8 +281,17 @@ class ChessBoard
   end
 
   # Return T if current player's king is in checkmate
-  def is_mate?()
+  def is_mate()
+    black = self.select_piece(@bking_pos)
+    white = self.select_piece(@wking_pos)
 
+    if self.is_check() == 'B' and black.moves == []
+      return 'B'
+    elsif self.is_check() == 'W' and white.moves == []
+      return 'W'
+    else
+      return nil
+    end
   end
 
   # Serialization
