@@ -76,6 +76,7 @@ class ChessBoard
       # Source set to default
       @board[source_array[0]][source_array[1]] = "."
       update_all()
+      check_filter()
       # Other player's move now
       @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
       
@@ -291,11 +292,11 @@ class ChessBoard
 
   # Return T if current player's king is in checkmate
   def is_mate()
-    black = self.select_piece(@bking_pos)
-    white = self.select_piece(@wking_pos)
+    black = select_piece(@bking_pos)
+    white = select_piece(@wking_pos)
 
     # binding.pry
-
+    
     if self.is_check() == 'B' and black.moves == []
       return 'B'
     elsif self.is_check() == 'W' and white.moves == []
@@ -373,10 +374,10 @@ class ChessBoard
               hboard.board[board_to_array(m)[0]][board_to_array(m)[1]] = tmp
             end
           end
+          # binding.pry if e.name == 'king' and e.position == @wking_pos
         end
       end
     end
-    # binding.pry
   end
 
   # Moves piece without checking validity
