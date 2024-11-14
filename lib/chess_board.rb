@@ -365,6 +365,12 @@ class ChessBoard
             real_piece.moves.delete(m) if hboard.is_check() == e.color()
             # restore original state
             hboard.force_move(m, real_piece.position)
+            # restore piece
+            if tmp == '.'
+              hboard.board[board_to_array(m)[0]][board_to_array(m)[1]] = '.'
+            else
+              hboard.board[board_to_array(m)[0]][board_to_array(m)[1]] = tmp
+            end
           end
         end
       end
