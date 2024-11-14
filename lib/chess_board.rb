@@ -9,8 +9,8 @@ require("pry-byebug")
 
 class ChessBoard
   include ChessCoords
-
-  attr_reader :current_player, :board, :player, :wking_pos, :bking_pos
+  attr_accessor :current_player
+  attr_reader :board, :player, :wking_pos, :bking_pos
 
   @@LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"]
   @@PIECES = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"]
@@ -278,9 +278,9 @@ class ChessBoard
     @board.each do |row|
       row.each do |e|
         if e.class == ChessPiece
-          if e.color.upcase() == 'B' and e.moves.include?(@wking_pos)
+          if e.color.upcase() == 'B' and e.moves.include?(@wking_pos) and self.current_player.upcase == 'W'
             return 'W'
-          elsif e.color.upcase() == 'W' and e.moves.include?(@bking_pos)
+          elsif e.color.upcase() == 'W' and e.moves.include?(@bking_pos) and self.current_player.upcase == 'B'
             return 'B'
           end
         end
@@ -361,6 +361,7 @@ class ChessBoard
           # Filter all moves that would lead to self check
           mcopy.each do |m|
             tmp = hboard.select_piece(m)
+            e.color.upcase == 'B' ? hboard.current_player = 'W' : hboard.current_player = 'B'
             hboard.force_move(e.position, m)
             real_piece.moves.delete(m) if hboard.is_check() == e.color()
             # restore original state
