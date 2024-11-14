@@ -56,6 +56,7 @@ class ChessBoard
     
     end
     outstr += "\n    A  B  C  D  E  F  G  H \n"
+    outstr += "CURRENT MOVE: #{@current_player}"
     return outstr
   end
     
@@ -413,5 +414,13 @@ class ChessBoard
       end
     end
     return p
+  end
+
+  # Get winner
+  def get_winner
+    if not self.is_mate.nil
+      self.is_mate() == 'W' ? winner = 'B' : winner = 'W'
+      return winner
+    end
   end
 end
