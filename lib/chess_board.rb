@@ -99,7 +99,9 @@ class ChessBoard
     end
 
     piece.moves.each do |move|
-      place_piece({'color' => 'X', 'position' => move})
+      row = board_to_array(move)[0]
+      col = board_to_array(move)[1]
+      @board[row][col].is_a?(ChessPiece) ? @board[row][col].icon = "X" : @board[row][col] = "X"
     end
   end
 
@@ -223,6 +225,8 @@ class ChessBoard
     check_filter()
     
   end
+
+
   
   # Places all pieces according to who the initial player is
   def place_pieces(color)
@@ -342,7 +346,30 @@ class ChessBoard
   
   # For each piece on the board, filter out moves that would result in checkmate
   def check_filter()
-  
+    # original
+    hboard = ChessBoard.copy(self)
+    # Iterate through elements
+    hboard.board.each do |row|
+      row.each do |e|
+        if e.is_a?(ChessPiece)
+          # copy moves into distinct array
+          mcopy = Array.new()
+          e.moves.each {|m| mcopy.append(m)}
+          # Get the real piece(from real board)
+          real_piece = self.select_piece(e.position)
+
+          # Filter all moves that would lead to self check
+          mcopy.each do |m|
+            tmp = hboard.select_piece(m)
+            hboard.force_move(e.position, m)
+            real_piece.moves.delete(m) if hboard.is_check() == e.color()
+            # restore original state
+            hboard.force_move(m, real_piece.position)
+          end
+        end
+      end
+    end
+    # binding.pry
   end
 
   # Moves piece without checking validity

@@ -5,8 +5,9 @@ require_relative('chess_coords')
 require('json')
 
 class ChessPiece
-  attr_reader :icon, :color, :name
-  attr_accessor :position, :moves
+  # move icon to reader
+  attr_reader :color, :name
+  attr_accessor :position, :moves, :icon
 
   include ChessCoords
 
