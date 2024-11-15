@@ -162,7 +162,7 @@ module ChessCoords
     # special left castle
     if not king.is_moved()
       l_rook = board.select_piece(array_to_board([row, column - 4]))
-      if not rlrook.is_moved()
+      if not l_rook.is_moved()
         # All tiles to the right of it
         args = {
           mode:  3,
