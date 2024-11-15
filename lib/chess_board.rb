@@ -74,13 +74,34 @@ class ChessBoard
       # Update moved piece's postion and possible moves
       p = select_piece(destination)
       p.position = destination
-      # update is_moves status
-      p.is_moved = true
-      
+
       # Source set to default
       @board[source_array[0]][source_array[1]] = "."
       update_all()
       check_filter()
+
+      # If the moved piece was a king, and the destination was a castle square, move the rook too
+      if p.name == 'king'
+        # A difference of two means a right move
+        if((dest_array[1] - source_array[1]) == 2)
+          # Force move the right rook 
+          if(p.color == "W")
+            @board.force_move("H1", "F1")
+          else
+            @board.force_move("H8", "F8")
+          end
+        # Difference of -2 means a left move
+        elsif((dest_array[1] - source_array[1]) == -2)
+          # Force move the left rook 
+          if(p.color == "W")
+            @board.force_move("A1", "D1")
+          else
+            @board.force_move("A8", "D8")
+          end
+        end
+      end
+      # update is_moves status
+      p.is_moved = true
       # Other player's move now
       @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
       
