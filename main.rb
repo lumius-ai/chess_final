@@ -36,13 +36,24 @@ def main
         elsif move.upcase == 'Q'
             puts("bye")
             return
-        # TEST
-        elsif move.upcase == 'WK'
-            p = board.select_piece(board.wking_pos)
-            puts(p.moves)
-        elsif not board.is_check().nil?
+        elsif not board.is_check().nil? and valid?(move)
             puts("#{board.is_check().upcase} is in check")
-            next
+            mv = prompt("Make your move to escape")
+
+            if valid?(mv)
+                mv = mv.split(" ")
+            else
+                next
+            end
+
+            fboard = ChessBoard.copy(board)
+            fboard.move_piece(mv[0], mv[1])
+            if fboard.is_check.nil?
+                board.move_piece(mv[0], mv[1])
+            else
+                puts("#{mv[0]} -> #{mv[1]} does not escape check")
+            end
+
         elsif valid?(move)
             move = move.split(" ")
             board.move_piece(move[0].upcase, move[1].upcase)
@@ -55,15 +66,10 @@ def main
 end
 
 def testing()
-    b = ChessBoard.load_game()
-    b.move_piece("H2", "H1")
-    b.visualise(b.wking_pos)
-    puts(b)
-    puts(b.is_mate)
 
 end
 
-testing()
+main()
 
 
 
