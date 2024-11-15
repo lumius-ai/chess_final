@@ -117,6 +117,8 @@ module ChessCoords
     column = coords[1]
     moves = []
 
+    king = board.select_piece(pos)
+
     # All adjacent tiles that exist
     moves.append([row + 1, column]) if (row + 1) < 8
     moves.append([row - 1, column]) if (row - 1) >= 0
@@ -131,6 +133,57 @@ module ChessCoords
     moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8
     moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0 #p
 
+    # special right castle
+    if not king.is_moved()
+      # Right rook relative to king
+      r_rook = board[row, column + 3]
+      if not r_rook.is_moved()
+        # All tiles to the right of it
+        args = {
+          mode:  2,
+          board: board, 
+          origin: pos,
+          curr_pos: pos
+        }
+        right_moves = calc_line(args)
+        # Remove all occupied squares
+        right_moves.union.each do |move|
+          p = board[move[0], move[1]]
+          if p.is_a?(ChessPiece) and not p == r_rook and not p == king
+            # Invalid if there's a piece in the way
+            return moves
+          end
+       end
+      #  Append castle move if clear
+       moves.append([row, column + 2])
+      end
+
+    end
+    # special left castle
+    if not king.is_moved()
+      l_rook = board.select_piece(array_to_board([row, column - 4]))
+      if not rlrook.is_moved()
+        # All tiles to the right of it
+        args = {
+          mode:  3,
+          board: board, 
+          origin: pos,
+          curr_pos: pos
+        }
+        left_moves = calc_line(args)
+        # Remove all occupied squares
+        left_moves.each do |move|
+          p = board[move[0], move[1]]
+          if p.is_a?(ChessPiece) and not p == r_rook and not p == king
+            # Invalid if there's a piece in the way
+            return moves
+          end
+       end
+      #  Append castle move if clear
+       moves.append([row, column - 2])
+      end
+    end
+
     return moves
 
   end
@@ -139,6 +192,7 @@ module ChessCoords
   def get_pawn(pos, player, color, board = DEFAULT_BOARD)
     moves = []
     coords = board_to_array(pos)
+    piece = board.select_piece(pos)
     row = coords[0]
     column = coords[1]
 
@@ -147,17 +201,18 @@ module ChessCoords
       if color == 'W'
         moves.append([row - 1, column]) if (row - 1) >= 0
 
-        # binding.pry
-
         moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0 and board[row - 1][column - 1] != '.'
         moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8 and board[row - 1][column + 1] != '.'
-
+        # Special move 2 squares forwards
+        moves.append([row - 2, column]) if not piece.is_moved
 
       else
         moves.append([row + 1, column]) if (row + 1) < 8
 
         moves.append([row + 1, column + 1]) if (row + 1) < 8 and (column + 1) < 8 and board[row + 1][column + 1] != '.'
         moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0 and board[row + 1][column - 1] != '.'
+        # Special move 2 squares forwards
+        moves.append([row + 2, column]) if not piece.is_moved
       end
 
     when "B"
@@ -166,11 +221,17 @@ module ChessCoords
 
         moves.append([row + 1, column + 1]) if (row + 1) < 8 and (column + 1) < 8 and board[row + 1][column + 1] != '.'
         moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0 and board[row + 1][column - 1] != '.'
+        # Special move 2 squares forwards
+        moves.append([row + 2, column]) if (row + 2) < 8 and not piece.is_moved
+
       else
         moves.append([row - 1, column]) if (row - 1) >= 0
 
         moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0 and board[row - 1][column - 1] != '.'
         moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8 and board[row - 1][column + 1] != '.'
+
+        # Special move 2 squares forwards
+        moves.append([row - 2, column]) if (row - 2) >= 0 and not piece.is_moved
 
       end
     end
