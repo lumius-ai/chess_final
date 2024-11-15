@@ -309,11 +309,10 @@ class ChessBoard
     black = select_piece(@bking_pos)
     white = select_piece(@wking_pos)
 
-    # binding.pry
     
-    if self.is_check() == 'B' and black.moves == [] and escapable?()
+    if self.is_check() == 'B' and black.moves == [] and not escapable?()
       return 'B'
-    elsif self.is_check() == 'W' and white.moves == [] and escapable?()
+    elsif self.is_check() == 'W' and white.moves == [] and not escapable?()
       return 'W'
     else
       return nil

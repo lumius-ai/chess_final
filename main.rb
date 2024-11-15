@@ -56,6 +56,7 @@ def main
             puts("Invalid input")
         end 
     end
+    puts(board)
     puts("WINNER: #{board.get_winner}")
     return
 end
