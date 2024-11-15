@@ -55,32 +55,12 @@ def main
 end
 
 def testing()
-    # b = ChessBoard.load_game()
-    b = ChessBoard.new()
-
-    # Problem section
-    piece = b.select_piece(b.wking_pos)
-    moves = b.get_king(b.wking_pos)
-    moves = moves.map {|e| b.array_to_board(e)}
-
-    mcopy = []
-    moves.each {|m| mcopy.append(m)}
-
-    mcopy.each do |move|
-        p = b.select_piece(move)
-        # binding.pry
-        if p.class == ChessPiece and p.color == piece.color
-          moves.delete(move)
-        end
-      end
-
-    puts(moves)
-    # puts(b.select_piece(b.wking_pos).moves)
-
+    b = ChessBoard.load_game()
+    b.move_piece("H2", "H1")
     b.visualise(b.wking_pos)
-    b.visualise(b.bking_pos)
-
     puts(b)
+    puts(b.is_mate)
+
 end
 
 testing()
