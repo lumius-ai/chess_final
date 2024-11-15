@@ -121,7 +121,7 @@ module ChessCoords
     moves.append([row + 1, column]) if (row + 1) < 8
     moves.append([row - 1, column]) if (row - 1) >= 0
 
-    moves.append([row, column + 1]) if (column + 1) < 8
+    moves.append([row, column + 1]) if (column + 1) < 8 #p
     moves.append([row, column - 1]) if (column - 1) >= 0
 
 
@@ -129,7 +129,7 @@ module ChessCoords
     moves.append([row - 1, column - 1]) if (row - 1) >= 0 and (column - 1) >= 0
 
     moves.append([row - 1, column + 1]) if (row - 1) >= 0 and (column + 1) < 8
-    moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0
+    moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0 #p
 
     return moves
 

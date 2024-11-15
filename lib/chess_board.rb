@@ -83,6 +83,7 @@ class ChessBoard
       
       return 0
     else
+      puts("Invalid move: #{source} -> #{destination}")
       return 1
     end 
   end
@@ -195,7 +196,12 @@ class ChessBoard
     moves = moves.map {|e| array_to_board(e)}
     # Delete self and other pieces of the same color
     moves.delete(p)
-    moves.each do |move|
+
+    # copy for iterating
+    mcopy = []
+    moves.each {|m| mcopy.append(m)}
+
+    mcopy.each do |move|
       p = select_piece(move)
 
       if p.class == ChessPiece and p.color == piece.color
@@ -265,12 +271,18 @@ class ChessBoard
 
   # Checks if destination is valid based on current player, takes array
   def destination_valid?(src, dst)
+
+    return false if src.length != 2 or dst.length != 2
+
     piece = select_piece(src)
     return (src != dst and piece.moves.include?(dst))
   end
 
   # Checks if source coord is valid based on current player, takes array
   def source_valid?(pos)
+    
+    return false if pos.length != 2
+
     piece = select_piece(pos)
     (piece.class() == ChessPiece and piece.color == @current_player.upcase()) ? true : false
   end
