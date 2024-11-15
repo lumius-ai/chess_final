@@ -74,6 +74,8 @@ class ChessBoard
       # Update moved piece's postion and possible moves
       p = select_piece(destination)
       p.position = destination
+      # update is_moves status
+      p.is_moved = true
       
       # Source set to default
       @board[source_array[0]][source_array[1]] = "."
@@ -87,11 +89,6 @@ class ChessBoard
       puts("Invalid move: #{source} -> #{destination}")
       return 1
     end 
-  end
-
-  # TEST REMOVE LATER
-  def clear()
-    @board = Array.new(8) {Array.new(8, '.')}
   end
 
   # All set all movable tiles to x
@@ -187,7 +184,7 @@ class ChessBoard
       moves = diags + cross
 
     when 'king'
-      moves = get_king(p)
+      moves = get_king(p, @board)
       piece.color == 'B'? @bking_pos = piece.position : @wking_pos = piece.position
 
     else
@@ -405,6 +402,8 @@ class ChessBoard
     # Update moved piece's postion and possible moves
     p = select_piece(destination)
     p.position = destination
+    # update piece's move status
+    p.is_moved = true
       
     # Source set to default
     @board[source_array[0]][source_array[1]] = "."

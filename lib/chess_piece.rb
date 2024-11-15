@@ -7,7 +7,7 @@ require('json')
 class ChessPiece
   # move icon to reader
   attr_reader :color, :name
-  attr_accessor :position, :moves, :icon
+  attr_accessor :position, :moves, :icon, :is_moved
 
   include ChessCoords
 
@@ -38,6 +38,7 @@ class ChessPiece
     args['name'].nil? ? @name = 'pawn': @name = args['name']
     args['position'].nil? ? @position = 'E5' : @position = args['position']
     args['moves'].nil? ? @moves = [] : @moves = args['moves']
+    args['is_moved'].nil? ? @is_moved = false : @is_moved = args['is_moved']
 
     case @color.upcase
     when "W"
@@ -61,7 +62,8 @@ class ChessPiece
       :color => @color,
       :name => @name,
       :position => @position,
-      :moves => @moves
+      :moves => @moves,
+      :is_moved => @is_moved
     })
   end
 

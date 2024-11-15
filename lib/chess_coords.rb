@@ -111,7 +111,7 @@ module ChessCoords
   end
 
   # Gets all adjacent tiles relative to the position
-  def get_king(pos)
+  def get_king(pos, board=DEFAULT_BOARD)
     coords = board_to_array(pos)
     row = coords[0]
     column = coords[1]
