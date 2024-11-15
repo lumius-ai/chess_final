@@ -311,9 +311,9 @@ class ChessBoard
 
     # binding.pry
     
-    if self.is_check() == 'B' and black.moves == []
+    if self.is_check() == 'B' and black.moves == [] and escapable?()
       return 'B'
-    elsif self.is_check() == 'W' and white.moves == []
+    elsif self.is_check() == 'W' and white.moves == [] and escapable?()
       return 'W'
     else
       return nil
@@ -415,13 +415,13 @@ class ChessBoard
       
   end
 
-  # Get all pieces on the board
-  def get_pieces(board)
+  # Get all pieces on the board of color "W" or "B"
+  def get_pieces(color)
     p = []
 
-    board.each do |row|
+    @board.each do |row|
       row.each do |e|
-        if e.is_a?(ChessPiece)
+        if e.is_a?(ChessPiece) and e.color == color.upcase
           p.append(e)
         end
       end
@@ -435,5 +435,23 @@ class ChessBoard
       self.is_mate() == 'W' ? winner = 'B' : winner = 'W'
       return winner
     end
+  end
+
+  # Checks to see if a check state is escapable
+  def escapable?
+    self.is_check().upcase == "W" ? c = self.wking_pos : c = self.bking_pos
+    k = self.select_piece(c)
+    pieces = self.get_pieces(k.color)
+    pieces.each do |piece|
+      piece.moves.each do |move|
+        # hypothetical board
+        h = ChessBoard.copy(self)
+        h.move_piece(piece.position, move)
+        # True if there exists a piece with a move that can break a check
+        return true if h.is_check().nil?
+      end
+    end
+    # False if no pieces can break the check 
+    return false
   end
 end
