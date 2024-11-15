@@ -56,7 +56,8 @@ class ChessBoard
     
     end
     outstr += "\n    A  B  C  D  E  F  G  H \n"
-    outstr += "CURRENT MOVE: #{@current_player}"
+    outstr += "CURRENT MOVE: #{@current_player}\n"
+    outstr += "#{self.is_check().upcase} in CHECK" if not self.is_check().nil?
     return outstr
   end
     
@@ -430,7 +431,7 @@ class ChessBoard
 
   # Get winner
   def get_winner
-    if not self.is_mate.nil
+    if not self.is_mate.nil?
       self.is_mate() == 'W' ? winner = 'B' : winner = 'W'
       return winner
     end

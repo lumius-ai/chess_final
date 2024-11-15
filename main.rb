@@ -37,26 +37,21 @@ def main
             puts("bye")
             return
         elsif not board.is_check().nil? and valid?(move)
-            puts("#{board.is_check().upcase} is in check")
-            mv = prompt("Make your move to escape")
+            move = move.split(" ")
+            move = move.map {|m| m.upcase}
 
-            if valid?(mv)
-                mv = mv.split(" ")
-            else
-                next
-            end
-
+            # Move on a hypothetical board first
             fboard = ChessBoard.copy(board)
-            fboard.move_piece(mv[0], mv[1])
-            if fboard.is_check.nil?
-                board.move_piece(mv[0], mv[1])
-            else
-                puts("#{mv[0]} -> #{mv[1]} does not escape check")
-            end
+            fboard.move_piece(move[0], move[1])
+            # Move for real if the hypothetical is out of check
+            board.move_piece(move[0], move[1]) if fboard.is_check.nil?
 
         elsif valid?(move)
             move = move.split(" ")
-            board.move_piece(move[0].upcase, move[1].upcase)
+            move = move.map {|m| m.upcase()}
+
+            board.move_piece(move[0], move[1])
+            puts("#{board.is_check} in check") if not board.is_check.nil?
         else
             puts("Invalid input")
         end 
