@@ -4,9 +4,6 @@ require_relative("chess_coords")
 
 require("json")
 
-# TEST remove
-require("pry-byebug")
-
 class ChessBoard
   include ChessCoords
   attr_accessor :current_player

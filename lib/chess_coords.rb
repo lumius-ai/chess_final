@@ -1,7 +1,5 @@
 # Module containing the functions to convert between chess board coordinates and array coordinates
 
-require "pry-byebug"
-
 module ChessCoords
   COLUMNS = {'A' => 0,
   'B' => 1,

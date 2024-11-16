@@ -1,8 +1,6 @@
 require_relative "lib/chess_board"
 require_relative "lib/chess_piece"
 
-require("pry-byebug")
-
 # Captures response to a prompt
 def prompt(str)
     puts(str)
@@ -62,12 +60,6 @@ def main
     return
 end
 
-def testing()
-    board = ChessBoard.load_game()
-    board.move_piece("E1", "C1")
-    puts(board)
-end
-# testing()
 main()
 
 
