@@ -117,7 +117,11 @@ module ChessCoords
     column = coords[1]
     moves = []
 
-    king = board.select_piece(pos)
+    king = board[row][column]
+    # Right rook relative to king
+    r_rook = board[row][column + 3] if (column + 3) < 8
+    # Left rook relative to king
+    l_rook = board[row][column - 4] if (column - 4) >= 0
 
     # All adjacent tiles that exist
     moves.append([row + 1, column]) if (row + 1) < 8
@@ -134,9 +138,7 @@ module ChessCoords
     moves.append([row + 1, column - 1]) if (row + 1) < 8 and (column - 1) >= 0 #p
 
     # special right castle
-    if not king.is_moved()
-      # Right rook relative to king
-      r_rook = board[row, column + 3]
+    if not king.is_moved() and r_rook.is_a?(ChessPiece)
       if not r_rook.is_moved()
         # All tiles to the right of it
         args = {
@@ -148,10 +150,11 @@ module ChessCoords
         right_moves = calc_line(args)
         # Remove all occupied squares
         right_moves.union.each do |move|
-          p = board[move[0], move[1]]
+          m = board_to_array(move)
+          p = board[m[0]][m[1]]
           if p.is_a?(ChessPiece) and not p == r_rook and not p == king
             # Invalid if there's a piece in the way
-            return moves
+            break
           end
        end
       #  Append castle move if clear
@@ -160,8 +163,7 @@ module ChessCoords
 
     end
     # special left castle
-    if not king.is_moved()
-      l_rook = board.select_piece(array_to_board([row, column - 4]))
+    if not king.is_moved() and l_rook.is_a?(ChessPiece)
       if not l_rook.is_moved()
         # All tiles to the right of it
         args = {
@@ -173,10 +175,11 @@ module ChessCoords
         left_moves = calc_line(args)
         # Remove all occupied squares
         left_moves.each do |move|
-          p = board[move[0], move[1]]
-          if p.is_a?(ChessPiece) and not p == r_rook and not p == king
+          m = board_to_array(move)
+          p = board[m[0]][m[1]]
+          if p.is_a?(ChessPiece) and not p == l_rook and not p == king
             # Invalid if there's a piece in the way
-            return moves
+            break
           end
        end
       #  Append castle move if clear
@@ -192,9 +195,9 @@ module ChessCoords
   def get_pawn(pos, player, color, board = DEFAULT_BOARD)
     moves = []
     coords = board_to_array(pos)
-    piece = board.select_piece(pos)
     row = coords[0]
     column = coords[1]
+    piece = board[row][column]
 
     case player.upcase()  
     when "W"

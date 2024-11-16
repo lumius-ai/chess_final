@@ -77,31 +77,33 @@ class ChessBoard
 
       # Source set to default
       @board[source_array[0]][source_array[1]] = "."
-      update_all()
-      check_filter()
 
       # If the moved piece was a king, and the destination was a castle square, move the rook too
       if p.name == 'king'
         # A difference of two means a right move
         if((dest_array[1] - source_array[1]) == 2)
           # Force move the right rook 
+          # White piece
           if(p.color == "W")
-            @board.force_move("H1", "F1")
+            @player == 'W' ? self.force_move("H1", "F1") : self.force_move("H8", "F8")
           else
-            @board.force_move("H8", "F8")
+            # Black piece
+            @player == 'W' ? self.force_move("H8", "F8") : self.force_move("H1", "F1")
           end
         # Difference of -2 means a left move
         elsif((dest_array[1] - source_array[1]) == -2)
           # Force move the left rook 
           if(p.color == "W")
-            @board.force_move("A1", "D1")
+            @player == 'W' ? self.force_move("A1", "D1") : self.force_move("A8", "D8")
           else
-            @board.force_move("A8", "D8")
+            @player == 'W' ? self.force_move("A8", "D8") : self.force_move("A1", "D1")
           end
         end
       end
       # update is_moves status
       p.is_moved = true
+      # refresh board
+      refresh()
       # Other player's move now
       @current_player.upcase() == "W" ? @current_player = "b" : @current_player = "w"
       
@@ -248,8 +250,7 @@ class ChessBoard
     @board[row][column] = piece
 
     # Calculate its valid moves
-    update_all()
-    check_filter()
+    refresh()
     
   end
 
@@ -472,5 +473,11 @@ class ChessBoard
     end
     # False if no pieces can break the check 
     return false
+  end
+
+  # Refreshes valid moves
+  def refresh()
+    self.update_all()
+    self.check_filter()
   end
 end

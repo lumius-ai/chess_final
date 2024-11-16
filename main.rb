@@ -55,6 +55,7 @@ def main
         else
             puts("Invalid input")
         end 
+        board.refresh()
     end
     puts(board)
     puts("WINNER: #{board.get_winner}")
@@ -62,9 +63,11 @@ def main
 end
 
 def testing()
-
+    board = ChessBoard.load_game()
+    board.move_piece("E1", "C1")
+    puts(board)
 end
-
+# testing()
 main()
 
 
